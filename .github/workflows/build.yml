@@ -64,10 +64,6 @@ jobs:
       - uses: actions/download-artifact@master
         with:
           name: main.pdf
-          path: MPC-PDA
-      - uses: actions/download-artifact@master
-        with:
-          name: main.pdf
           path: MPC-KRY
 
       # Prepare tag name
@@ -100,6 +96,11 @@ jobs:
           asset_name: MPC-KRY.pdf
           asset_content_type: application/pdf
 
+
+      - uses: actions/download-artifact@master
+        with:
+          name: main.pdf
+          path: MPC-PDA
       # Upload the assets
       # Again, if there is better way, please, let me know.
       - name: Add MPC-PDA to release
