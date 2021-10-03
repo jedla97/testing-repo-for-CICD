@@ -51,7 +51,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@master
         with:
-          name: ${{matrix.dir}}
+          name: ${{matrix.dir}}.pdf
           path: ${{matrix.dir}}
 
 
@@ -63,7 +63,7 @@ jobs:
 
       - uses: actions/download-artifact@master
         with:
-          name: main.pdf
+          name: KRY.pdf
           path: MPC-KRY
 
       # Prepare tag name
@@ -99,7 +99,7 @@ jobs:
 
       - uses: actions/download-artifact@master
         with:
-          name: main.pdf
+          name: PDA.pdf
           path: MPC-PDA
       # Upload the assets
       # Again, if there is better way, please, let me know.
