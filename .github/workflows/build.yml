@@ -42,13 +42,12 @@ jobs:
           working_directory: MPC-PDA
           root_file: main.tex
 
-       - name: Build MPC-PDAS
+       - name: Build MPC-PTK
         uses: xu-cheng/latex-action@v2
         with:
           latexmk_shell_escape: true
-          working_directory: MPC-PDAS
+          working_directory: MPC-PTK
           root_file: main.tex
-
     
 
       # Prepare tag name
