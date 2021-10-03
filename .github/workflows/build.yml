@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: ${{matrix.dir}}.pdf
-          path: ${{matrix.dir}}
+          path: ${{matrix.dir}}/main.pdf
 
   release:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_path: ./${{matrix.dir}}.pdf
+        asset_path: ${{matrix.dir}}.pdf
         asset_name: ${{matrix.dir}}.pdf
         asset_content_type: application/pdf
 
