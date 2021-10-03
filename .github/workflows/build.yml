@@ -74,6 +74,18 @@ jobs:
           asset_name: MPC-KRY.pdf
           asset_content_type: application/pdf
 
+      # Upload the assets
+      # Again, if there is better way, please, let me know.
+      - name: Add MPC-PDA to release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_draft_release.outputs.upload_url }}
+          asset_path: ./MPC-PDA/main.pdf
+          asset_name: MPC-PDA.pdf
+          asset_content_type: application/pdf
+
       # Publish the release
       - name: Publish release
         uses: eregon/publish-release@v1
