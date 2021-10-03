@@ -35,8 +35,6 @@ jobs:
       matrix:
         dir: ${{fromJson(needs.directories.outputs.dir)}} # List matrix strategy from directories dynamically
     steps:
-      - run: echo ${{matrix.dir}}
-    steps:
       # Clone the repository
       - name: Set up Git repository
         uses: actions/checkout@v2
