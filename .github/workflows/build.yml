@@ -29,7 +29,6 @@ jobs:
         run: echo "::set-output name=dir::$(ls -d */ | jq -R -s -c 'split("\n")[:-1]')"
         # Define step output named dir base on ls command transformed to JSON thanks to jq
   loop:
-    runs-on: ubuntu-latest
     needs: [directories] # Depends on previous job
     strategy:
       matrix:
@@ -49,7 +48,6 @@ jobs:
           root_file: main.tex
 
   build:
-    runs-on: ubuntu-latest
     needs: [loop]
 
     steps: 
