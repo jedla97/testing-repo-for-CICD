@@ -52,7 +52,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@master
         with:
-          name: ${{matrix.dir}}.pdf
+          name: ${{matrix.dir}}
           path: ${{matrix.dir}}/main.pdf
 
   release:
@@ -93,7 +93,7 @@ jobs:
     - name: Download Artifact
       uses: actions/download-artifact@master
       with:
-        name: ${{matrix.dir}}.pdf
+        name: ${{matrix.dir}}
         path: ${{matrix.dir}}
 
     - name: Upload Artifact to Release
@@ -102,7 +102,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_path: ./${{matrix.dir}}.pdf
-        asset_name: ${{matrix.dir}}.pdf
+        asset_path: ./${{matrix.dir}}/main.pdf
+        asset_name: ${{matrix.dir}}
         asset_content_type: application/pdf
 
