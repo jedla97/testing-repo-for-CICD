@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v2
       - id: set-dirs # Give it an id to handle to get step outputs in the outputs key above
         run: echo "::set-output name=dir::$(ls -d */ | tr -d "template/" |
-         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-2]')"
+         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
         # Define step output named dir base on ls command transformed to JSON thanks to jq
   loop:
     runs-on: ubuntu-latest
@@ -102,7 +102,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_path: ${{matrix.dir}}.pdf
+        asset_path: ./${{matrix.dir}}/${{matrix.dir}}.pdf
         asset_name: ${{matrix.dir}}.pdf
         asset_content_type: application/pdf
 
