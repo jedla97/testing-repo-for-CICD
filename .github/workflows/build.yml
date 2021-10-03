@@ -36,7 +36,19 @@ jobs:
         dir: ${{fromJson(needs.directories.outputs.dir)}} # List matrix strategy from directories dynamically
     steps:
       - run: echo ${{matrix.dir}}
-      
+    steps:
+      # Clone the repository
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+
+      # Make the builds
+      # If there is a better way to do this, instead of doing it one-by-one, let me know
+        uses: xu-cheng/latex-action@v2
+        with:
+          latexmk_shell_escape: true
+          working_directory: ${{matrix.dir}}
+          root_file: main.tex
+
   build:
     runs-on: ubuntu-latest
 
