@@ -18,51 +18,66 @@ on:
       - "**/*.tex"
 
 jobs:
-
-  directories: # Job that list subdirectories
+  # vypis všech složek předmětů
+  listDirectories: 
     runs-on: ubuntu-latest
+    
     outputs:
       dir: ${{ steps.set-dirs.outputs.dir }} # generate output name dir by using inner step output
+    
     steps:
-      - uses: actions/checkout@v2
-      - id: set-dirs # Give it an id to handle to get step outputs in the outputs key above
-        run: echo "::set-output name=dir::$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
-         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
-        # Define step output named dir base on ls command transformed to JSON thanks to jq
-  loop:
-    runs-on: ubuntu-latest
-    needs: [directories] # Depends on previous job
-    strategy:
-      matrix:
-        dir: ${{fromJson(needs.directories.outputs.dir)}} # List matrix strategy from directories dynamically
-    steps:
-      # Clone the repository
+      # naklonování repa
       - name: Set up Git repository
         uses: actions/checkout@v2
 
-      # Make the builds
-      # If there is a better way to do this, instead of doing it one-by-one, let me know
-      - name: Build ${{matrix.dir}}
+      - name: Prepare list of directories for jobs
+        id: set-dirs # name for output 
+        
+        # vypis všech dir | odstranění template/ dir | odstranění prázdného řádku po template/dir
+        # | odstranění všech speciálních znaků | rozdělení na json data pro matrix build
+        run: echo "::set-output name=dir::$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
+         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
+  
+  # build všech předmětů 
+  subjects:
+    runs-on: ubuntu-latest
+    needs: listDirectories
+
+    # vytvoření jobu pro každý předmět
+    strategy:
+      matrix:
+        dir: ${{ fromJson(needs.listDirectories.outputs.dir) }} 
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+
+      # kompilace
+      - name: Build ${{ matrix.dir }}
         uses: xu-cheng/latex-action@v2
         with:
           latexmk_shell_escape: true
-          working_directory: ${{matrix.dir}}
+          working_directory: ${{ matrix.dir }}
           root_file: main.tex
 
-      - name: Upload
-        uses: actions/upload-artifact@master
+      # nahrání pro pozdější stáhnutí
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
         with:
-          name: ${{matrix.dir}}
-          path: ${{matrix.dir}}/main.pdf
+          name: ${{ matrix.dir }} # název zip souboru se specifickým jméne předmětu
+          path: ${{ matrix.dir }}/main.pdf # co se má uložit do zip souboru
 
+  # vytvoření prázdného releasu
   release:
     runs-on: ubuntu-latest
-    needs: loop
+    needs: subjects
+
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Set up Git repository
+      uses: actions/checkout@v2
 
     - name: Create tag
       id: create_tag
@@ -80,29 +95,34 @@ jobs:
         release_name: ${{ steps.create_tag.outputs.tag }}
         draft: false
         prerelease: false
-  add:
+
+  # přidání jednotlivých pdf předmětů do releasu
+  addSubjects:
     runs-on: ubuntu-latest
-    needs: [ directories, loop, release ]
+    needs: [ listDirectories, subjects, release ]
+
     strategy:
       matrix:
-        dir: ${{fromJson(needs.directories.outputs.dir)}} # List matrix strategy from directories dynamically
+        dir: ${{ fromJson(needs.listDirectories.outputs.dir) }} # List matrix strategy from listDirectories dynamically
    
     steps:
     - uses: actions/checkout@v2
 
-    - name: Download Artifact
-      uses: actions/download-artifact@master
+    # stažení dříve nahráneho zip souboru v subjects jobu
+    - name: Download artifact
+      uses: actions/download-artifact@v2
       with:
-        name: ${{matrix.dir}}
-        path: ${{matrix.dir}}
+        name: ${{ matrix.dir }}
+        path: ${{ matrix.dir }}
 
-    - name: Upload Artifact to Release
+    # přidání do releasu
+    - name: Upload artifact to Release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
-        asset_path: ./${{matrix.dir}}/main.pdf
-        asset_name: ${{matrix.dir}}
+        asset_path: ./${{ matrix.dir }}/main.pdf # cesta k souboru
+        asset_name: ${{ matrix.dir }}.pdf # název v releasu
         asset_content_type: application/pdf
 
