@@ -26,7 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: set-dirs # Give it an id to handle to get step outputs in the outputs key above
-        run: echo "::set-output name=dir::$(ls -d */ | tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
+        run: echo "::set-output name=dir::$(ls -d */ | tr -dc '[:alnum:]\n\r-' |
+         tr -d "template" | jq -R -s -c 'split("\n")[:-1]')"
         # Define step output named dir base on ls command transformed to JSON thanks to jq
   loop:
     runs-on: ubuntu-latest
@@ -92,8 +93,8 @@ jobs:
     - name: Download Artifact
       uses: actions/download-artifact@master
       with:
-        name: ${{matrix.dir}}/${{matrix.dir}}.pdf
-        path: ${{matrix.dir}}
+        name: ${{matrix.dir}}.pdf
+        path: ${{matrix.dir}}/
 
     - name: Upload Artifact to Release
       uses: actions/upload-release-asset@v1
