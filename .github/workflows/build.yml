@@ -41,6 +41,7 @@ jobs:
 
       # Make the builds
       # If there is a better way to do this, instead of doing it one-by-one, let me know
+      - name: Build ${{matrix.dir}}
         uses: xu-cheng/latex-action@v2
         with:
           latexmk_shell_escape: true
