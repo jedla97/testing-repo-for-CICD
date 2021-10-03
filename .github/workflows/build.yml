@@ -8,7 +8,9 @@ name: Build all subject PDFs
 on:
   push:
     branches:
-      - main
+      - master
+    paths:
+      - "**/*.tex"
   workflow_dispatch:
     branches:
       - main
