@@ -51,7 +51,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@master
         with:
-          name: main.pdf
+          name: ${{matrix.dir}}
           path: ${{matrix.dir}}
 
 
