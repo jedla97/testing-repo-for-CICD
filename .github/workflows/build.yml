@@ -82,7 +82,7 @@ jobs:
         prerelease: false
   add:
     runs-on: ubuntu-latest
-    needs: [ loop, release ]
+    needs: [ directories, loop, release ]
     strategy:
       matrix:
         dir: ${{fromJson(needs.directories.outputs.dir)}} # List matrix strategy from directories dynamically
