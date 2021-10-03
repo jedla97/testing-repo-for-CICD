@@ -13,7 +13,7 @@ on:
       - "**/*.tex"
   workflow_dispatch:
     branches:
-      - master
+      - main
     paths:
       - "**/*.tex"
 
@@ -28,18 +28,18 @@ jobs:
 
       # Make the builds
       # If there is a better way to do this, instead of doing it one-by-one, let me know
-      - name: Build BPC-KRY
+      - name: Build MPC-KRY
         uses: xu-cheng/latex-action@v2
         with:
           latexmk_shell_escape: true
-          working_directory: BPC-KRY
+          working_directory: MPC-KRY
           root_file: main.tex
 
-      - name: Build BPC-PDA
+      - name: Build MPC-PDA
         uses: xu-cheng/latex-action@v2
         with:
           latexmk_shell_escape: true
-          working_directory: BPC-PDA
+          working_directory: MPC-PDA
           root_file: main.tex
 
     
@@ -64,14 +64,14 @@ jobs:
 
       # Upload the assets
       # Again, if there is better way, please, let me know.
-      - name: Add BPC-KRY to release
+      - name: Add MPC-KRY to release
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_draft_release.outputs.upload_url }}
-          asset_path: ./BPC-KRY/main.pdf
-          asset_name: BPC-KRY.pdf
+          asset_path: ./MPC-KRY/main.pdf
+          asset_name: MPC-KRY.pdf
           asset_content_type: application/pdf
 
       # Publish the release
