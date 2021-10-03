@@ -50,28 +50,9 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    needs: needs: [loop]
 
-    steps:
-      # Clone the repository
-      - name: Set up Git repository
-        uses: actions/checkout@v2
-
-      # Make the builds
-      # If there is a better way to do this, instead of doing it one-by-one, let me know
-      - name: Build MPC-KRY
-        uses: xu-cheng/latex-action@v2
-        with:
-          latexmk_shell_escape: true
-          working_directory: MPC-KRY
-          root_file: main.tex
-
-      - name: Build MPC-PDA
-        uses: xu-cheng/latex-action@v2
-        with:
-          latexmk_shell_escape: true
-          working_directory: MPC-PDA
-          root_file: main.tex    
-
+    steps: 
       # Prepare tag name
       - name: Create tag
         id: create_tag
