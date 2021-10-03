@@ -1,0 +1,117 @@
+\section{Hierarchie výpočetní složitosti. Třídy složitosti P, NP, \#P, PSPACE, EXP, NP-těžké. Definice problému Problém batohu (Knapsnack), problém směrování vozidel (VRP), Metrický k-střed.}
+
+\subsection{Polynomická vs exponenciální časová složitost.}
+
+Algoritmy s polynomickou složitostí lze efektivně řešit, bez vynaložení velkého výpočetního výkonu. 
+S délkou vstupu \textit{n} roste lineárně potřebný čas ($n^x$) například hledání nejkratší cesty. 
+Algoritmy s exponenciální složitostí lze efektivně řešit pouze pro malé exponenty, bez potřeby velkého výpočetního výkonu. 
+S délkou vstupu \textit{n} roste exponenciálně potřebný čas ($x^n$) například problém obchodního cestujícího.
+
+\subsection{Hierarchie výpočetní složitosti.}
+
+Hierarchie výpočetní složitosti slouží k charakterizaci algoritmů u kterých lze pouze nepřímo určit asymptotickou složitost. 
+Využívá se třídní hierarchie. 
+Třídy od nejjednoduší po nejsložitější jdou v tomto pořadí: P $\subseteq$ NP $\subseteq$ PH $\subseteq$ \#P $\subseteq$ PSPACE $\subseteq$ EXP (NSPACE) $\subseteq$ NP-složité $\subseteq$ unsolvable. 
+Jednoduší třída je vždy podmnožinou složitější (do složitější patří i ty jednoduší).
+
+\subsection{Třída P}
+
+Třída P obsahuje polynimiální problémy. 
+Tyto problémy se dají vyřešit v polynomiálním čase na deterministickém Turingově stroji (TS). 
+Příkladem může být nalezení nejkdatší cesty, minimální kostry v grafu.
+
+\subsection{Třída NP}
+
+Třída NP obsahuje nedetermisistické polynomiální problémy. 
+Tyto problémy lze řešit v polynomiálním čase na nedetermistickém TS (doposud nesestaven).
+
+\subsection{Třída NP-complete (NP-úplné)}
+
+NP-úplné (NPC) je podskupina problémů třídy NP, která se zabývá rozhodovacími problémy.
+Jejich řešení je nejtěžší a všechna známá řešení lze na determistickém TS provést pouze s exponenciálním čase. 
+Pro polinomiální nebylo zatím nalezeno řešení, ale zároveň nebylo dokázáno, že řešení neexistuje.
+
+\textbf{Problém NPC}\,--\,pokud by se podařilo, převést jeden NPC problém na polynomiální čas tak to znamená, že každý NPC problém lze převést do polynomiálního. 
+To by vedlo k prokázání P $=$ NP.
+
+Bylo dokázáno, že každý algoritmus pro NPC problém lze použít k řešení jiného NPC problému.
+Přibližně existuje 10\,000 známých NPC problémů.
+Příkladem může být\,--\,Barvení grafů, Knapsnack (problém batohu), 3-partition problém (rozdělti množinu čísel podmnožiny o velikosti 3, které mají stejný součet)
+
+\subsection{Třída NP-těžké}
+
+O problému řekneme, že je NP-težký, jestliže se na něj redukuje NPC problém, ale zároveň nevíme jestli spadá do NP.
+Redukce znaméná že se dá převést/konvertovat.
+
+\subsection{P vs NP}
+
+P je podmnožina NP jelikož každý problém lze řešit v polynomiálním čase na
+ nedetermistickém TS.
+Existuje matematický problém P $=$ NP, který dosud nebyl potvrzen nebo vyvrácen. Takže se přesně nedá určit jestli je P $=$ NP. 
+Obecně se považuje, že P $\neq$ NP.
+
+\subsection{Třída \#P}
+
+Je podmnožina NP
+
+\subsection{Třída PSPACE}
+
+\subsection{Třída EXP}
+
+\subsection{Knapsnack}
+
+Existuje osoba (zloděj), který má batoh/zavazadlo.
+Zavazadlo má určitou maximální hmotnost/velikost.
+Zloděj se snaží do batohu vložit co nejvíce zboží v co největší hodnotě. 
+Každé toto zboží má jinou hmotnost/velikost a jinou hodnotu.
+Takže zloděj hledá co nejoptimálnější zboží, které může vložit do batohu a tím mít co největší profit.
+
+\subsection{Problém směrování vozidel (VRP)}
+
+Existuje 1 místo (sklad), která má x vozidel.
+Vozidla ze skladu musí objet všechny místa a dovést tam zboží. 
+Vozidla nemusí navštivit stejný počet míst, ale množina vozidel musí navštívit všechna místa co nejoptimálněji. 
+Při jednom vozidle podobné problému obchodního cestujícího (TSP), jen s rozdílem, že u TSP si vybíráme začátek, ale u VRP máme začátek přesně definován.
+
+
+\clearpage
+\section{Problém obchodního cestujícího a modifikace genetických algoritmů, Genetické programování, Optimalizace hejnem, Optimalizace mravenčí kolonií, Evoluční strategie.}
+
+navštívit každý vrchol a minimalizovat cestu
+patří do NP-težký ale při tranformaci do rozhodovacího problému spadá do NPC 
+spadá do teorie grafů a cílem je nalést hamiltnovský cyklus
+
+
+\clearpage
+\section{Definice grafu. Incidenční matice, matice sousednosti. Handshaking lemma. Algoritmus detekce bipartitního grafu. Silně propojené komponenty. Kosarajův algoritmus. Tarjanův algoritmus.}
+
+
+\clearpage
+\section{Vlastnosti grafu: průměr, excentricita. Párování grafu. Maďarský algoritmus. Problém časové tabule. Algoritmus barvení grafu. Izomorfismus grafu a Ullmanův algoritmus.}
+
+
+\clearpage
+\section{Problém maximálního toku a minimálního řezu grafem. Řešení problému s více zdroji a více cíly. Ford Fulkersonův algoritmus. Definice úzkého hrdla. Definice reziduální cesty.}
+
+
+\clearpage
+\section{Univerzální aproximační funkce. Dopředná neuronová síť. Maticová reprezentace NN. Gradientní sestup. Vrstva zahazování. Aktivační funkce. Softmax.}
+
+
+\clearpage
+\section{Konvoluční neuronové sítě – princip. Max pooling, Dávková normalizace. Známé architektury neuronových sítí.}
+
+
+\clearpage
+\section{Lineární regrese. Polynomiální regrese. Logistická regrese.}
+
+
+\clearpage
+\section{Rekurentní neuronové sítě. LSTM. UNet sítě. Struktury neuronových sítí.}
+
+
+\clearpage
+\section{Q-učení, srovnání s genetickými algoritmy.}
+
+\clearpage
+\section{Extrakce znalostí ze stromových a grafových struktur. Metoda náhodného průchodu. Node2Vec. Obecná umělá inteligence – relační induktivní zaměření, kombinatorická generalizace. Předávání zpráv.}
