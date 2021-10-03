@@ -105,9 +105,3 @@ jobs:
         asset_path: ./${{matrix.dir}}/${{matrix.dir}}.pdf
         asset_name: ${{matrix.dir}}.pdf
         asset_content_type: application/pdf
-
-
-MPC-KRY/
-MPC-PDA/
-template/
-
