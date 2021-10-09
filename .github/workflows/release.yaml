@@ -12,10 +12,6 @@ on:
     paths:
       - "**/*.tex"
   workflow_dispatch:
-    branches:
-      - main
-    paths:
-      - "**/*.tex"
 
 jobs:
   # vypis všech složek předmětů
