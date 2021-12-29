@@ -1,9 +1,10 @@
-name: Build all subject PDFs and release them
+name: Build all template PDF and release it
 
 # Feel free to increment this counter in your attempts to do things
 # the smart way instead of the easy way.
 #
-# total_hours_wasted = 16
+# total_hours_wasted = 17
+
 
 on:
   push:
@@ -11,40 +12,14 @@ on:
       - main
     paths:
       - "**/*.tex"
+      - "**/*.png"
+      - "**/*.jpg"
   workflow_dispatch:
 
 jobs:
-  # zjištění všech složek předmětů
-  listOfDirectories: 
+  # build šablony
+  build:
     runs-on: ubuntu-latest
-    
-    outputs:
-      # aktuálních složek pro vytvoření jobs matrix předmětů
-      dir: ${{ steps.set-dirs.outputs.dir }}
-    
-    steps:
-      # naklonování repa
-      - name: Set up Git repository
-        uses: actions/checkout@v2
-
-      - name: Prepare list of directories for jobs
-        # název výstupu
-        id: set-dirs
-        
-        # vypis všech dir | odstranění template/ dir | odstranění prázdného řádku po template/dir
-        # | odstranění všech speciálních znaků | rozdělení na json data pro matrix build
-        run: echo "::set-output name=dir::$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
-         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
-  
-  # build všech předmětů 
-  subjects:
-    runs-on: ubuntu-latest
-    needs: listOfDirectories
-
-    # vytvoření samostatného jobu pro každý předmět
-    strategy:
-      matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }} 
 
     steps:
       - name: Set up Git repository
@@ -58,14 +33,17 @@ jobs:
           working_directory: ${{ matrix.dir }}
           root_file: main.tex
 
-      # nahrání pro pozdější stáhnutí
+      - name: Set env
+        run: echo "NAME=$(grep -F "\newcommand{\subject}" main.tex | cut -d'{' -f 3 | cut -d'}' -f 1)" >> $GITHUB_ENV
+
+      # nahrání pro pozdější stažení
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          # název zip souboru se specifickým jméne předmětu
-          name: ${{ matrix.dir }}
+          # název zip souboru se specifickým jménem předmětu
+          name: ${{ env.NAME }}
           # co se má uložit do zip souboru
-          path: ${{ matrix.dir }}/main.pdf
+          path: main.pdf
 
   # vytvoření prázdného releasu
   release:
@@ -83,7 +61,6 @@ jobs:
       run: |
         tag=build-$(date +%Y%m%d-%H%M%S)
         echo "::set-output name=tag::$tag"
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -96,25 +73,22 @@ jobs:
         prerelease: false
 
   # přidání jednotlivých pdf předmětů do releasu
-  addSubjects:
+  addBuilt:
     runs-on: ubuntu-latest
     # potřeba listOfDirectories pro vytvoření jobs matrix
-    needs: [ listOfDirectories, subjects, release ]
+    needs: [ build, release ]
 
-    # vytvoření samostatného jobu pro každý předmět
-    strategy:
-      matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }}
-  
     steps:
     - uses: actions/checkout@v2
+
+    - name: Set env
+      run: echo "NAME=$(grep -F "\newcommand{\subject}" main.tex | cut -d'{' -f 3 | cut -d'}' -f 1)" >> $GITHUB_ENV
 
     # stažení dříve nahráneho zip souboru v subjects jobu
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: ${{ matrix.dir }}
-        path: ${{ matrix.dir }}
+        name: ${{ env.NAME }}
 
     # přidání do releasu
     - name: Upload artifact to Release
@@ -124,7 +98,8 @@ jobs:
       with:
         upload_url: ${{ needs.release.outputs.upload_url }}
         # cesta k souboru
-        asset_path: ./${{ matrix.dir }}/main.pdf
+        asset_path: ./main.pdf
         # název v releasu
-        asset_name: ${{ matrix.dir }}.pdf
+        asset_name: ${{ env.NAME }}.pdf
         asset_content_type: application/pdf
+        
