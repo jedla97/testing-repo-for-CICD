@@ -34,7 +34,7 @@ jobs:
         # vypis všech dir | odstranění template/ dir | odstranění prázdného řádku po template/dir
         # | odstranění všech speciálních znaků | rozdělení na json data pro matrix build
         run: echo "DIR_NAME=$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
-         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_ENV"
+         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   
   # build všech předmětů 
   subjects:
