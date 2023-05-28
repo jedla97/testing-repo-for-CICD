@@ -18,6 +18,10 @@ jobs:
   listOfDirectories: 
     runs-on: ubuntu-latest
     
+    outputs:
+      # aktuálních složek pro vytvoření jobs matrix předmětů
+      dir: ${{ steps.set-dirs.outputs.DIR_NAME }}
+    
     steps:
       # naklonování repa
       - name: Set up Git repository
@@ -40,7 +44,7 @@ jobs:
     # vytvoření samostatného jobu pro každý předmět
     strategy:
       matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.DIR_NAME) }} 
+        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }} 
 
     steps:
       - name: Set up Git repository
@@ -101,7 +105,7 @@ jobs:
     # vytvoření samostatného jobu pro každý předmět
     strategy:
       matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.DIR_NAME) }}
+        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }}
   
     steps:
     - uses: actions/checkout@v2
