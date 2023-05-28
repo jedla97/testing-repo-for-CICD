@@ -119,7 +119,7 @@ jobs:
 
     # přidání do releasu
     - name: Upload artifact to Release
-      uses: AButler/upload-release-assets@v2.0
+      uses: shogo82148/actions-upload-release-asset@v1.6.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
