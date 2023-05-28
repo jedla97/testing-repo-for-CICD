@@ -18,10 +18,6 @@ jobs:
   listOfDirectories: 
     runs-on: ubuntu-latest
     
-    outputs:
-      # aktuálních složek pro vytvoření jobs matrix předmětů
-      dir: ${{ steps.set-dirs.outputs.dir }}
-    
     steps:
       # naklonování repa
       - name: Set up Git repository
@@ -33,8 +29,8 @@ jobs:
         
         # vypis všech dir | odstranění template/ dir | odstranění prázdného řádku po template/dir
         # | odstranění všech speciálních znaků | rozdělení na json data pro matrix build
-        run: echo "::set-output name=dir::$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
-         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')"
+        run: echo "DIR_NAME=$(ls -d */ | sed "s/template\///" | sed "/^$/d" |
+         tr -dc '[:alnum:]\n\r-' | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   
   # build všech předmětů 
   subjects:
@@ -44,7 +40,7 @@ jobs:
     # vytvoření samostatného jobu pro každý předmět
     strategy:
       matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }} 
+        dir: ${{ fromJson(needs.listOfDirectories.outputs.DIR_NAME) }} 
 
     steps:
       - name: Set up Git repository
@@ -105,7 +101,7 @@ jobs:
     # vytvoření samostatného jobu pro každý předmět
     strategy:
       matrix:
-        dir: ${{ fromJson(needs.listOfDirectories.outputs.dir) }}
+        dir: ${{ fromJson(needs.listOfDirectories.outputs.DIR_NAME) }}
   
     steps:
     - uses: actions/checkout@v2
