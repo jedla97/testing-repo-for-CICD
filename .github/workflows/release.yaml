@@ -83,7 +83,7 @@ jobs:
       id: create_tag
       run: |
         tag=build-$(date +%Y%m%d-%H%M%S)
-        echo "name=$tag" >> "$RELEASE_TAG"
+        echo "name=${tag}" >> $RELEASE_TAG
 
     - name: Create Release
       id: create_release
